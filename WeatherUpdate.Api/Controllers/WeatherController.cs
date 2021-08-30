@@ -51,13 +51,13 @@ namespace WeatherUpdate.Api.Controllers
 
         [Route("~/api/GetAllWeatherAsync")]
         [HttpGet]
-        public async Task<ActionResult<List<Weather>>> GetAllWeatherAsync()
+        public async Task<ActionResult<List<WeatherGetModel>>> GetAllWeatherAsync()
         {
             var weathers = await weatherRepository.GetAllWeatherAsync();
 
             if (weathers.Count != 0)
             {
-                return Ok(new { weathers, Message = "Success" });
+                return weathers;
             }
 
             return BadRequest(new { Message = "Unsuccessfull" });

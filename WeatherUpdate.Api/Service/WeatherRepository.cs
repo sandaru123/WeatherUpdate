@@ -77,18 +77,32 @@ namespace WeatherUpdate.Service
 
         }
 
-        public async Task<List<Weather>> GetAllWeatherAsync()
+        public async Task<List<WeatherGetModel>> GetAllWeatherAsync()
         {
             try
             {
                 List<Weather> weather = new List<Weather>();
+                List<WeatherGetModel> weatherModel = new List<WeatherGetModel>();
                 weather = await DBContext.Weather.OrderByDescending(c => c.UpdatedDate).ToListAsync();
                 if (weather.Count != 0)
                 {
-                    return weather;
+                    foreach (var obj in weather)
+                    {
+                       WeatherGetModel getModel = new WeatherGetModel();
+                        getModel.WeatherId = obj.WeatherId;
+                        getModel.UpdatedDate = obj.UpdatedDate;
+                        getModel.temperature = obj.Temperature;
+                        getModel.humidity = obj.Humidity;
+                        getModel.MinTemp = obj.MinTemp;
+                        getModel.MaxTemp = obj.MaxTemp;
+
+                        weatherModel.Add(getModel);
+                    }
+
+                    return weatherModel;
                 }
 
-                return weather;
+                return weatherModel;
 
             }
             catch (Exception ex)

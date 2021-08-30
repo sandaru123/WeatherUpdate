@@ -12,6 +12,6 @@ namespace WeatherUpdate.Service.Interface
         Task UpdateWeatherDetailsAsync();
         Task<bool> CreateWeatherAsync(WeatherModel weatherModel);
 
-        Task<List<Weather>> GetAllWeatherAsync();
+        Task<List<WeatherGetModel>> GetAllWeatherAsync();
     }
 }
