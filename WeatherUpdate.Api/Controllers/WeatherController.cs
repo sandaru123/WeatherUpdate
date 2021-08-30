@@ -38,6 +38,8 @@ namespace WeatherUpdate.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> SaveWeatherDetailsAsync(WeatherModel weather)
         {
+
+
             var bl = await weatherRepository.CreateWeatherAsync(weather);
 
             if (bl)

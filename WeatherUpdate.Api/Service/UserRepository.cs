@@ -102,5 +102,30 @@ namespace WeatherUpdate.Service
                 throw ex;
             }
         }
+
+
+        public async Task<bool> UpdateTokenByIdAsync(int userId, string token)
+        {
+            try
+            {
+                if (userId != 0)
+                {
+                    var user = await context.User.FirstOrDefaultAsync(c=>c.UserId == userId);
+                    if (user != null)
+                    {
+                        user.Token = token;
+                        await context.SaveChangesAsync();
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
     }
 }

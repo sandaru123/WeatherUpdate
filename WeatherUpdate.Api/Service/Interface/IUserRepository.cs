@@ -15,7 +15,8 @@ namespace WeatherUpdate.Service.Interface
         
 
         Task<int> GetUserIdByUsernameAndPasswordAsync(string username, string password);
-       
+
+        Task<bool> UpdateTokenByIdAsync(int userId, string token);
 
         Task<bool> UpdateTokenAsync(UserModel userModel);
        

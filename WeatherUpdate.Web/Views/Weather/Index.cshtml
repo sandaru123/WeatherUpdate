@@ -10,7 +10,36 @@
    
 </head>
 <body>
+    <form class="form-inline">
+        <div class="form-group" style="width:100%;margin-bottom: 1%;">
+            <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3"> <label>Temperature</label></div>
+                <div class="col-md-8 mb-3">  <input type="text" id="temp_add" class="form-control mx-sm-3" placeholder="Temperature"> </div>
 
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3"> <label>Humidity</label></div>
+                <div class="col-md-8 mb-3">  <input type="text" id="humidity_add" class="form-control mx-sm-3" placeholder="Humidity"></div>
+            </div>
+        </div>
+
+        <div class="form-group" style="width:100%;margin-bottom: 1%;">
+            <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3"> <label>Minimum Temperature</label></div>
+                <div class="col-md-8 mb-3">  <input type="text" id="minTemp_add" class="form-control mx-sm-3" placeholder="Min Temperature"></div>
+
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3"> <label>Maximum Temperature</label></div>
+                <div class="col-md-8 mb-3">  <input type="text" id="maxTemp_add" class="form-control mx-sm-3" placeholder="Max Temperature"></div>
+            </div>
+
+        </div>
+       
+
+    </form>
+
+    <button type="button" id="weather_add" class="btn btn-primary btn-sm">Add Weather</button>
     <div class="container">
         <h2>Striped Rows s</h2>
         <p>The .table-striped class adds zebra-stripes to a table:</p>
@@ -20,74 +49,103 @@
                     <th>Date</th>
                     <th>Humidity</th>
                     <th>Temperature</th>
-                    <th>MinTemp</th>
+                    <th>Max Temp</th>
+                    <th>Min Temp</th>
                 </tr>
             </thead>
             <tbody>
-                @*<tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>*@
             </tbody>
         </table>
     </div>
 
 
+
+
+
+
     <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css" />
-   
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
-    
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
     <script>
         $(document).ready(function () {
-           
-            //$.ajax({
-            //    type: "GET",
-            //    url: "/Weather/GetAllWeatherData",
-            //    data: {},
-            //    contentType: "application/json; charset=utf-8",
-            //    dataType: "json",
-            //    success: function (response) {
-                   
-            //        var i;
-            //        for (i = 0; i < response.length; i++) {
-            //            $("#myTable > tbody").append("<tr><td> " + response[i].humidity + "</td><td>" + response[i].temperature + "</td><td>" + response[i].minTemp + "</td></tr>");
-            //        }
+  
+            $("#weather_add").click(function () {
+                event.preventDefault();
+                
 
-            //    }
+                var weatherModel = {
+                    Humidity: "", Temperature: "", MinTemp: "", MaxTemp: ""
+                }
+                weatherModel.Humidity = $("#humidity_add").val();
+                weatherModel.Temperature = $("#temp_add").val();
+                weatherModel.MinTemp = $("#minTemp_add").val();
+                weatherModel.MaxTemp = $("#maxTemp_add").val();
+
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: '/Weather/AddWeatherdata1',
+                        data: {},
+                        contentType: "application/json; charset=utf-8",
+                        success:
+                            function (response) {
+                                // Generate HTML table.  
+                                alert("Pass: " + response);
+                            },
+                        error:
+                            function (response) {
+                                alert("Error: " + response);
+                            }
+                    });  
+
+
+                //$.ajax({
+                //    type: "GET",
+                //    url: "/Weather/CreateWeatherAsync",
+                //    data: {weatherAdd:1},
+                //    contentType: "application/json; charset=utf-8",
+                //    dataType: "json",
+                //    success: function (res) {
+                //        alert("done");
+
+                //    }
+                //});
+            });
+
+            //$("#weather_add").on("click", function (event) {
+               
+               
+
             //});
 
-            
-            
 
-            $("#myTable").DataTable({
+
+            var table = $("#myTable").DataTable({
                 "ajax": {
                     "url": "/Weather/GetAllWeatherData",
                     "type": "GET",
                     "datatype": "json"
                 },
+                "order": [[3, "desc"]],
                 "columns": [
                     { "data": "updatedDate" },
                     { "data": "humidity" },
                     { "data": "temperature" },
+                    { "data": "maxTemp" },
                     { "data": "minTemp" }
                 ]
             })
 
-           
-
-            
+            setInterval(function () {
+                table.ajax.reload();
+            }, 10000);
 
         });
     </script>
