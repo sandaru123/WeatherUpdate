@@ -47,6 +47,7 @@
             <thead>
                 <tr>
                     <th>Date</th>
+                    <th>Time</th>
                     <th>Humidity</th>
                     <th>Temperature</th>
                     <th>Max Temp</th>
@@ -74,57 +75,33 @@
 
     <script>
         $(document).ready(function () {
-  
+
             $("#weather_add").click(function () {
                 event.preventDefault();
-                
+
 
                 var weatherModel = {
-                    Humidity: "", Temperature: "", MinTemp: "", MaxTemp: ""
+                    humidity: "", temperature: "", min_temperature: "", max_temperature: ""
                 }
-                weatherModel.Humidity = $("#humidity_add").val();
-                weatherModel.Temperature = $("#temp_add").val();
-                weatherModel.MinTemp = $("#minTemp_add").val();
-                weatherModel.MaxTemp = $("#maxTemp_add").val();
+                weatherModel.humidity = $("#humidity_add").val();
+                weatherModel.temperature = $("#temp_add").val();
+                weatherModel.min_temperature = $("#minTemp_add").val();
+                weatherModel.max_temperature = $("#maxTemp_add").val();
 
-                $.ajax(
-                    {
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: '/Weather/AddWeatherdata1',
-                        data: {},
-                        contentType: "application/json; charset=utf-8",
-                        success:
-                            function (response) {
-                                // Generate HTML table.  
-                                alert("Pass: " + response);
-                            },
-                        error:
-                            function (response) {
-                                alert("Error: " + response);
-                            }
-                    });  
+               
+
+                $.post('@Url.Action("AddWeatherdata")', { weatherModel: weatherModel },
+                    function (response) {
+                        $("#humidity_add").val("");
+                        $("#temp_add").val("");
+                        $("#minTemp_add").val("");
+                        $("#maxTemp_add").val("");
+                       
+                       alert("Pass: " + response);
+                   });
 
 
-                //$.ajax({
-                //    type: "GET",
-                //    url: "/Weather/CreateWeatherAsync",
-                //    data: {weatherAdd:1},
-                //    contentType: "application/json; charset=utf-8",
-                //    dataType: "json",
-                //    success: function (res) {
-                //        alert("done");
-
-                //    }
-                //});
             });
-
-            //$("#weather_add").on("click", function (event) {
-               
-               
-
-            //});
-
 
 
             var table = $("#myTable").DataTable({
@@ -133,9 +110,10 @@
                     "type": "GET",
                     "datatype": "json"
                 },
-                "order": [[3, "desc"]],
+                "order": [[0, "desc"]],
                 "columns": [
-                    { "data": "updatedDate" },
+                    { "data": "updateDatestr" },
+                    { "data": "updatedTimestr" },
                     { "data": "humidity" },
                     { "data": "temperature" },
                     { "data": "maxTemp" },

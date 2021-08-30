@@ -9,9 +9,14 @@ namespace WeatherUpdate.Web.Models.Weather
     {
         public int WeatherId { get; set; }
         public DateTime? UpdatedDate { get; set; }
+       
         public int? Humidity { get; set; }
         public int? Temperature { get; set; }
         public int? MinTemp { get; set; }
         public int? MaxTemp { get; set; }
+
+
+        public string UpdateDatestr { get; set; }
+        public string UpdatedTimestr { get; set; }
     }
 }

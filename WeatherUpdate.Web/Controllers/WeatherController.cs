@@ -50,6 +50,15 @@ namespace WeatherUpdate.Web.Controllers
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     weatherUrl = JsonConvert.DeserializeObject<List<WeatherModel>>(apiResponse);
 
+
+                    foreach (var obj in weatherUrl)
+                    {
+                        DateTime dt = obj.UpdatedDate.HasValue ? obj.UpdatedDate.Value : DateTime.MinValue;
+                      
+                        obj.UpdatedTimestr = dt.ToLongTimeString();  // includes leading zeros
+                        obj.UpdateDatestr = dt.ToLongDateString();  // includes leading zeros
+                    }
+
                     newList = weatherUrl.OrderByDescending(x => x.WeatherId).ToList();
 
                 }
@@ -58,7 +67,7 @@ namespace WeatherUpdate.Web.Controllers
             return Json(new { data = newList });
         }
 
-        public async Task<ActionResult> AddWeatherData()
+        public async Task<ActionResult> AddWeatherData1()
         {
             bool res = true;
             WeatherAddModel weatherAddModel = new WeatherAddModel();
@@ -88,7 +97,7 @@ namespace WeatherUpdate.Web.Controllers
         }
 
 
-        public async Task<ActionResult<bool>> AddWeatherdata1()
+        public async Task<ActionResult<bool>> AddWeatherdata(WeatherAddModel weatherModel)
         {
             using (var client = new HttpClient())
             {
@@ -96,17 +105,12 @@ namespace WeatherUpdate.Web.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                WeatherAddModel weatherAddModel = new WeatherAddModel();
-                weatherAddModel.humidity = 12;
-                weatherAddModel.temperature = 12;
-                weatherAddModel.min_temperature = 12;
-                weatherAddModel.max_temperature = 12;
 
-
-                var response = client.PostAsync("api/SaveWeatherDetailsAsync", new StringContent(new JavaScriptSerializer().Serialize(weatherAddModel), Encoding.UTF8, "application/json")).Result;
+                var response = client.PostAsync("api/SaveWeatherDetailsAsync", new StringContent(new JavaScriptSerializer().Serialize(weatherModel), Encoding.UTF8, "application/json")).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
+                    
                     return true;
                 }
                 return false;

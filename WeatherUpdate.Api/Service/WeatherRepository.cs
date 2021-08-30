@@ -32,8 +32,8 @@ namespace WeatherUpdate.Service
                 weather.MaxTemp = weatherJson.max_temperature;
                 weather.MinTemp = weatherJson.min_temperature;
 
-                weather.UpdatedDate = DateTime.UtcNow;
-                weather.UpdatedTime = DateTime.UtcNow.TimeOfDay;
+                weather.UpdatedDate = DateTime.Now;
+                weather.UpdatedTime = DateTime.Now.TimeOfDay;
 
                 await DBContext.Weather.AddAsync(weather);
                 await DBContext.SaveChangesAsync();
@@ -62,8 +62,8 @@ namespace WeatherUpdate.Service
                 weather.MinTemp = weatherModel.min_temperature;
                 weather.MaxTemp = weatherModel.max_temperature;
 
-                weather.UpdatedDate = DateTime.UtcNow;
-                weather.UpdatedTime = DateTime.UtcNow.TimeOfDay;
+                weather.UpdatedDate = DateTime.Now;
+                weather.UpdatedTime = DateTime.Now.TimeOfDay;
 
                 await DBContext.Weather.AddAsync(weather);
                 await DBContext.SaveChangesAsync();
@@ -83,7 +83,7 @@ namespace WeatherUpdate.Service
             {
                 List<Weather> weather = new List<Weather>();
                 List<WeatherGetModel> weatherModel = new List<WeatherGetModel>();
-                weather = await DBContext.Weather.OrderByDescending(c => c.UpdatedDate).ToListAsync();
+                weather = await DBContext.Weather.OrderByDescending(c => c.WeatherId).ToListAsync();
                 if (weather.Count != 0)
                 {
                     foreach (var obj in weather)
