@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using WeatherUpdate.Api.Model.User.Login;
+using WeatherUpdate.Model.User;
 using WeatherUpdate.Service.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -110,6 +111,28 @@ namespace WeatherUpdate.Api.Controllers
             return response;
         }
         #endregion
+
+        [AllowAnonymous]
+        [HttpPost(nameof(RegisterUser))]
+        public async Task<ActionResult<bool>> RegisterUser([FromBody] LoginModel data)
+        {
+            UserModel user = new UserModel();
+            if (data!= null)
+            {
+                user.UserName = data.UserName;
+                user.Password = data.Password;
+
+                var bl = await userRepository.CreateUserAsync(user);
+
+                if (bl)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         #region Get
         /// <summary>
